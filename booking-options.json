@@ -1,0 +1,51 @@
+{
+  "passengerOptions": [
+    {
+      "id": "solo",
+      "name": "Solo Traveler",
+      "description": "Travel independently and meet fellow space explorers",
+      "minPassengers": 1,
+      "maxPassengers": 1,
+      "basePriceMultiplier": 1.0,
+      "defaultPassengerCount": 1
+    },
+    {
+      "id": "couple",
+      "name": "Couple",
+      "description": "Perfect for couples seeking a romantic space adventure",
+      "minPassengers": 2,
+      "maxPassengers": 2,
+      "basePriceMultiplier": 1.8,
+      "defaultPassengerCount": 2
+    },
+    {
+      "id": "group",
+      "name": "Group",
+      "description": "Ideal for families or groups of friends traveling together",
+      "minPassengers": 3,
+      "maxPassengers": 8,
+      "basePriceMultiplier": 2.5,
+      "defaultPassengerCount": 3
+    }
+  ],
+  "departureLocations": [
+    {
+      "id": "spaceport-alpha",
+      "name": "SpacePort Alpha",
+      "location": "Cape Canaveral, Florida",
+      "description": "Our primary launch facility with state-of-the-art amenities"
+    },
+    {
+      "id": "spaceport-beta",
+      "name": "SpacePort Beta", 
+      "location": "Guiana Space Centre, French Guiana",
+      "description": "Equatorial launch site for optimal orbital insertion"
+    },
+    {
+      "id": "spaceport-gamma",
+      "name": "SpacePort Gamma",
+      "location": "Baikonur Cosmodrome, Kazakhstan",
+      "description": "Historic spaceport with extensive facilities"
+    }
+  ]
+}
