@@ -74,6 +74,27 @@
             background: linear-gradient(to right, #0ea5e9, #8b5cf6);
             transition: width 0.3s ease;
         }
+
+        .login-card {
+            background: rgba(26, 26, 46, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 15px;
+        }
+        
+        .form-input {
+            background: rgba(22, 33, 62, 0.5);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 8px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: rgba(14, 165, 233, 0.7);
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+            outline: none;
+        }
         
         .nav-link:hover::after {
             width: 100%;
@@ -133,8 +154,8 @@
             <div class="hidden md:flex space-x-8">
                 <a href="index.html" class="nav-link hover:text-neon-blue transition-colors">Home</a>
                 <a href="destinations.html" class="nav-link hover:text-neon-blue transition-colors">Destinations</a>
-                <a href="booking.html" class="nav-link hover:text-neon-blue transition-colors">Booking</a>
-                <a href="about.html" class="nav-link hover:text-neon-blue transition-colors text-neon-blue">About</a>
+                <a href="booking.html" class="nav-link hover:text-neon-blue transition-colors text-neon-blue">Booking</a>
+                <a href="about.html" class="nav-link hover:text-neon-blue transition-colors">About</a>
                 <a href="login.html" class="nav-link hover:text-neon-blue transition-colors">Login</a>
             </div>
             
@@ -150,45 +171,66 @@
     <main class="container mx-auto px-4 py-8 relative z-10">
         <!-- Page Header -->
         <section class="py-12 text-center">
-            <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-6 text-glow">Book Your Space Journey</h1>
-            <p class="text-xl max-w-3xl mx-auto text-gray-300">
+            <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4">Book Your Space Journey</h1>
+            <p class="text-lg max-w-2xl mx-auto text-gray-300">
                 Begin your adventure to the stars.Fill out the form below to reserve your spot on our next space voyage . 
             </p>
         </section>
 
-        <!-- Our Mission -->
-        <section class="py-12">
-            <div class="content-card p-8 mb-12 m-7">
+        <!-- Login Card -->
+            <div class="login-card p-8">
+                <div class="mb-8">
+                    
+                    <h1 class="font-orbitron text-3xl mb-2 text-glow">Journey Details</h1>
+                </div>
                 
-            </div>
-        </section>
+                <form class="space-y-6">
+                    <div>
+                        <label class="block text-gray-300 mb-2">Destination</label>
+                        <input type="name" class="form-input w-full px-4 py-3" placeholder="Select your destination">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-300 mb-2">Departure Date</label>
+                        <input type="date" class="form-input w-full px-4 py-3" placeholder="Enter your password">
+                    </div>
 
-        <!-- Our Values -->
-        <section class="py-12">
-            <h2 class="font-orbitron text-3xl text-center mb-12 text-glow">Our Values</h2>
+                    <div>
+                        <label class="block text-gray-300 mb-2">Number of Passengers</label>
+                        <div class="flex flex-wrap gap-4">
+                        <label class="flex items-center">
+                            <input type="radio" name="passengers" value="solo" class="mr-2 text-blue-500">
+                            Solo Traveler
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="passengers" value="Couple" class="mr-2 text">
+                            Couple (2)
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="passengers" value="Group" class="mr-2 text-blue-500">
+                            Group (3-6)
+                        </label>
+                    </div>
+                    </div>
+
+                    <section class="py-12">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="content-card p-6 text-center">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-r from-neon-blue to-neon-cyan flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-shield-alt text-white text-2xl"></i>
-                    </div>
+                    
                     <h3 class="font-orbitron text-xl mb-3">Safety First</h3>
                     <p class="text-gray-300">
                         We prioritize passenger safety above all else, with redundant systems and rigorous testing protocols.
                     </p>
                 </div>
                 <div class="content-card p-6 text-center">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-r from-neon-purple to-pink-500 flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-leaf text-white text-2xl"></i>
-                    </div>
+                   
                     <h3 class="font-orbitron text-xl mb-3">Sustainable Exploration</h3>
                     <p class="text-gray-300">
                         Our operations are designed to minimize environmental impact and promote responsible space tourism.
                     </p>
                 </div>
                 <div class="content-card p-6 text-center">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-users text-white text-2xl"></i>
-                    </div>
+                   
                     <h3 class="font-orbitron text-xl mb-3">Accessibility</h3>
                     <p class="text-gray-300">
                         We're committed to making space travel available to as many people as possible through innovative financing.
@@ -197,109 +239,58 @@
             </div>
         </section>
 
-        <!-- Our Journey -->
-        <section class="py-12">
-            <div class="content-card p-8">
-                <h2 class="font-orbitron text-3xl mb-8 text-glow">Our Journey</h2>
-                <div class="space-y-8">
-                    <div class="timeline-item">
-                        <h3 class="font-orbitron text-xl mb-2 text-neon-blue">2025 - Foundation</h3>
-                        <p class="text-gray-300">
-                            SpaceVoyager founded by Dr. Elena Rodriguez and Marcus Thorne with the vision of commercial space tourism.
-                        </p>
+                    <div class="mb-8">
+                    
+                    <h1 class="font-orbitron text-3xl mb-2 text-glow">Personal Information</h1>
                     </div>
-                    <div class="timeline-item">
-                        <h3 class="font-orbitron text-xl mb-2 text-neon-blue">2027 - First Test Flight</h3>
-                        <p class="text-gray-300">
-                            Successful unmanned test flight of the Odyssey spacecraft to low Earth orbit and back.
-                        </p>
-                    </div>
-                    <div class="timeline-item">
-                        <h3 class="font-orbitron text-xl mb-2 text-neon-blue">2029 - Lunar Tourism</h3>
-                        <p class="text-gray-300">
-                            First commercial flight around the Moon with four civilian passengers aboard.
-                        </p>
-                    </div>
-                    <div class="timeline-item">
-                        <h3 class="font-orbitron text-xl mb-2 text-neon-blue">2031 - Mars Initiative</h3>
-                        <p class="text-gray-300">
-                            Announcement of the Mars colonization program and beginning of construction on the first Martian habitat.
-                        </p>
-                    </div>
-                    <div class="timeline-item">
-                        <h3 class="font-orbitron text-xl mb-2 text-neon-blue">2033 - Present Day</h3>
-                        <p class="text-gray-300">
-                            Regular flights to multiple destinations including the Moon, Mars, and orbital hotels. Over 500 passengers served.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <!-- The Team -->
-        <section class="py-12">
-            <h2 class="font-orbitron text-3xl text-center mb-12 text-glow">Meet Our Leadership</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="content-card p-6 text-center">
-                    <div class="w-24 h-24 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center mx-auto mb-4">
-                        <span class="text-white font-bold text-xl">ER</span>
+                     <div>
+                        <label class="block text-gray-300 mb-2">First Name</label>
+                        <input type="email" class="form-input w-full px-4 py-3" placeholder="Select your destination">
                     </div>
-                    <h3 class="font-orbitron text-xl mb-1">Dr. Elena Rodriguez</h3>
-                    <p class="text-neon-blue mb-3">CEO & Founder</p>
-                    <p class="text-gray-300 text-sm">
-                        Former NASA engineer with 15 years of experience in spacecraft design and propulsion systems.
-                    </p>
-                </div>
-                <div class="content-card p-6 text-center">
-                    <div class="w-24 h-24 rounded-full bg-gradient-to-r from-neon-cyan to-neon-blue flex items-center justify-center mx-auto mb-4">
-                        <span class="text-white font-bold text-xl">MT</span>
+                    
+                    <div>
+                        <label class="block text-gray-300 mb-2">Last Name</label>
+                        <input type="date" class="form-input w-full px-4 py-3" placeholder="Enter your password">
                     </div>
-                    <h3 class="font-orbitron text-xl mb-1">Marcus Thorne</h3>
-                    <p class="text-neon-blue mb-3">CTO & Co-Founder</p>
-                    <p class="text-gray-300 text-sm">
-                        Aerospace entrepreneur and visionary behind reusable spacecraft technology.
-                    </p>
-                </div>
-                <div class="content-card p-6 text-center">
-                    <div class="w-24 h-24 rounded-full bg-gradient-to-r from-neon-purple to-pink-500 flex items-center justify-center mx-auto mb-4">
-                        <span class="text-white font-bold text-xl">SK</span>
+                    
+                     <div>
+                        <label class="block text-gray-300 mb-2">Email Address</label>
+                        <input type="email" class="form-input w-full px-4 py-3" placeholder="Select your destination">
                     </div>
-                    <h3 class="font-orbitron text-xl mb-1">Dr. Sarah Kim</h3>
-                    <p class="text-neon-blue mb-3">Chief Medical Officer</p>
-                    <p class="text-gray-300 text-sm">
-                        Space medicine specialist ensuring passenger health and safety during space travel.
-                    </p>
-                </div>
-                <div class="content-card p-6 text-center">
-                    <div class="w-24 h-24 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center mx-auto mb-4">
-                        <span class="text-white font-bold text-xl">JR</span>
+                    
+                    <div>
+                        <label class="block text-gray-300 mb-2">Departure Date</label>
+                        <input type="date" class="form-input w-full px-4 py-3" placeholder="Enter your password">
                     </div>
-                    <h3 class="font-orbitron text-xl mb-1">James Robinson</h3>
-                    <p class="text-neon-blue mb-3">Head of Astronaut Training</p>
-                    <p class="text-gray-300 text-sm">
-                        Former astronaut with multiple space missions and extensive extravehicular experience.
-                    </p>
-                </div>
-            </div>
-        </section>
 
-        <!-- Call to Action -->
-        <section class="py-12 text-center">
-            <div class="content-card p-8 max-w-2xl mx-auto">
-                <h2 class="font-orbitron text-3xl mb-4 text-glow">Join Our Mission</h2>
-                <p class="text-gray-300 text-lg mb-6">
-                    Be part of the next chapter in human exploration. Your journey to the stars begins here.
-                </p>
-                <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="booking.html" class="btn-primary text-white px-6 py-3 rounded-lg font-bold">
-                        Book Your Journey
-                    </a>
-                    <a href="#" class="border border-neon-blue text-neon-blue px-6 py-3 rounded-lg font-bold hover:bg-neon-blue/10 transition-colors">
-                        Careers at SpaceVoyager
-                    </a>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="remember" class="mr-2">
+                            <label for="remember" class="text-gray-300 text-sm">Remember me</label>
+                        </div>
+                        <a href="#" class="text-neon-blue text-sm hover:underline">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="border border-neon-blue text-neon-white px-6 py-3 rounded-lg font-bold hover:bg-neon-blue/10 transition-colors w-full ">
+                        Add passanger
+                    </button>
+
+                    <button type="submit" class="btn-primary text-white w-full py-3 rounded-lg font-bold glow">
+                        Login to Account
+                    </button>
+                </form>
+                
+                <div class="mt-6 pt-6 border-t border-neon-blue/20">
+                    <p class="text-gray-400 text-center">
+                        Don't have an account? 
+                        <a href="#" class="text-neon-blue hover:underline">Sign up now</a>
+                    </p>
                 </div>
             </div>
-        </section>
+
+
     </main>
 
     <!-- Footer -->
