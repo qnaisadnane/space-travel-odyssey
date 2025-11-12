@@ -749,6 +749,25 @@ h4 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
   border-top: 1px solid rgba(14, 165, 233, 0.2);
 }
 
+.error-message {
+  position: absolute;
+  top: -1.2rem;
+  left: 0;
+  color: #f87171; 
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+input.is-invalid {
+  border: 1px solid #f87171;
+  box-shadow: 0 0 8px rgba(248, 113, 113, 0.5);
+}
+
+input.is-valid {
+  border: 1px solid #34d399;
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
+}
+
 /* Utility Classes */
 .text-center { text-align: center; }
 .text-left { text-align: left; }
