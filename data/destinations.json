@@ -9,6 +9,7 @@
       "description": "Earth's closest celestial neighbor offers low-gravity adventures, stunning views of our home planet, and the historic Apollo landing sites. Experience lunar sunrises that are truly out of this world.",
       "shortDescription": "Low-gravity adventures with breathtaking Earth views",
       "travelDuration": "3 days",
+      "day": "3",
       "distance": "384,400 km",
       "gravity": "1.62 m/s² (16.6% of Earth)",
       "temperature": "-173°C to 127°C",

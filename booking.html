@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - SpaceVoyager</title>
+    <title>Booking - SpaceVoyager</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
@@ -35,45 +32,38 @@
             background: linear-gradient(to bottom, #0a0a18, #1a1a2e, #16213e);
             background-attachment: fixed;
         }
-
+        
         .star {
             position: absolute;
             background-color: white;
             border-radius: 50%;
             animation: twinkle 5s infinite;
         }
-
+        
         @keyframes twinkle {
-
-            0%,
-            100% {
-                opacity: 0.2;
-            }
-
-            50% {
-                opacity: 1;
-            }
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
         }
-
+        
         .glow {
             box-shadow: 0 0 15px rgba(14, 165, 233, 0.5);
         }
-
+        
         .text-glow {
             text-shadow: 0 0 10px rgba(14, 165, 233, 0.7);
         }
-
+        
         .content-card {
             background: rgba(26, 26, 46, 0.7);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(14, 165, 233, 0.3);
             border-radius: 15px;
         }
-
+        
         .nav-link {
             position: relative;
         }
-
+        
         .nav-link::after {
             content: '';
             position: absolute;
@@ -84,6 +74,11 @@
             background: linear-gradient(to right, #0ea5e9, #8b5cf6);
             transition: width 0.3s ease;
         }
+        .conf-booking:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
 
         .login-card {
             background: rgba(26, 26, 46, 0.7);
@@ -91,7 +86,7 @@
             border: 1px solid rgba(14, 165, 233, 0.3);
             border-radius: 15px;
         }
-
+        
         .form-input {
             background: rgba(22, 33, 62, 0.5);
             border: 1px solid rgba(14, 165, 233, 0.3);
@@ -99,32 +94,38 @@
             color: white;
             transition: all 0.3s ease;
         }
-
+        
         .form-input:focus {
             border-color: rgba(14, 165, 233, 0.7);
             box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
             outline: none;
         }
-
+        
         .nav-link:hover::after {
             width: 100%;
         }
-
+        
         .btn-primary {
             background: linear-gradient(to right, #0ea5e9, #8b5cf6);
             transition: all 0.3s ease;
         }
-
+        
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
         }
 
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
         .timeline-item {
             position: relative;
             padding-left: 2rem;
         }
-
+        
         .timeline-item::before {
             content: '';
             position: absolute;
@@ -134,7 +135,7 @@
             width: 2px;
             background: linear-gradient(to bottom, #0ea5e9, #8b5cf6);
         }
-
+        
         .timeline-item::after {
             content: '';
             position: absolute;
@@ -147,33 +148,29 @@
         }
     </style>
 </head>
-
 <body class="text-white font-exo min-h-screen">
-    <!-- Stars Background -->
     <div id="stars-container"></div>
-
+    
     <!-- Navigation -->
     <nav class="bg-space-dark/80 backdrop-blur-md border-b border-neon-blue/20 sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div
-                    class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center glow">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center glow">
                     <i class="fas fa-rocket text-white"></i>
                 </div>
                 <a href="index.html" class="font-orbitron text-xl font-bold text-glow">SpaceVoyager</a>
             </div>
 
             <div id="username-display" class="hidden text-neon-blue font-bold text-lg"></div>
-
+            
             <div class="hidden md:flex space-x-8">
                 <a href="index.html" class="nav-link hover:text-neon-blue transition-colors">Home</a>
                 <a href="destinations.html" class="nav-link hover:text-neon-blue transition-colors">Destinations</a>
-                <a href="booking.html"
-                    class="nav-link hover:text-neon-blue transition-colors text-neon-blue">Booking</a>
+                <a href="booking.html" class="nav-link hover:text-neon-blue transition-colors text-neon-blue">Booking</a>
                 <a href="about.html" class="nav-link hover:text-neon-blue transition-colors">About</a>
                 <a href="login.html" class="nav-link hover:text-neon-blue transition-colors">Login</a>
             </div>
-
+            
             <div class="md:hidden">
                 <button class="text-white focus:outline-none">
                     <i class="fas fa-bars text-xl"></i>
@@ -188,111 +185,86 @@
         <section class="py-12 text-center">
             <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4">Book Your Space Journey</h1>
             <p class="text-lg max-w-2xl mx-auto text-gray-300">
-                Begin your adventure to the stars.Fill out the form below to reserve your spot on our next space voyage
-                .
+                Begin your adventure to the stars. Fill out the form below to reserve your spot on our next space voyage.
             </p>
         </section>
 
-        <!-- Login Card -->
-        <div class="login-card p-8 mx-32">
+        <!-- Booking Form -->
+        <div class="login-card p-8 mx-4 md:mx-32 mb-12">
             <div class="mb-8">
-
                 <h1 class="font-orbitron text-3xl mb-2 text-glow">Journey Details</h1>
             </div>
-
-            <form class="space-y-6">
+            
+            <form id="bookingForm" class="space-y-6">
                 <div>
                     <label class="block text-gray-300 mb-2">Destination</label>
-                    <select id="destination" class="form-input w-full px-4 py-3">
+                    <select id="destination" class="form-input w-full px-4 py-3" required>
                         <option value="">Select a destination</option>
                     </select>
                 </div>
 
+                 <!-- Departure Date -->
                 <div>
                     <label class="block text-gray-300 mb-2">Departure Date</label>
-                    <input type="date" id="depaturedate" class="form-input w-full px-4 py-3"
-                        placeholder="Enter your password">
+                    <input type="date" id="departureDate" class="form-input w-full px-4 py-3" required>
                 </div>
 
+                <label class="text-xl">Number of Passengers</label>
+                <div class="flex flex-wrap gap-3 py-4 radio-op">
+                    <div class="flex gap-2">
+                        <input type="radio" name="passengers" id="solo" value="1" checked required />
+                        <label for="solo">Solo Traveler (1)</label>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="radio" name="passengers" id="couple" value="2" />
+                        <label for="couple">Couple (2)</label>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="radio" name="passengers" id="group" value="3-6" />
+                        <label for="group">Group (3-6)</label>
+                    </div>
+                </div>
+                
+                <!-- Accommodation Section -->
+                <div id="accommodationSection" class="hidden">
+                    <label class="block text-gray-300 mb-2">Accommodation Type</label>
+                    <div id="accommodationOptions" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    </div>
+                </div>
+                
+                <!-- Conditional Fields -->
+                <div id="conditionalFields">
+                    <!-- Conditional fields will appear here -->
+                </div>
+                 
+                <hr class=" border-[rgba(14,165,233,0.3)] border-1 my-6">
+
                 <div>
-                    <label class="block text-gray-300 mb-2">Number of Passengers</label>
-                    <div class="flex flex-wrap gap-4">
-                        <label class="flex items-center">
-                            <input type="radio" name="passengers" value="solo" class="mr-2 text-blue-500">
-                            Solo Traveler
-                        </label>
-                        <label class="flex items-center">
-                            <input type="radio" name="passengers" value="Couple" class="mr-2 text">
-                            Couple (2)
-                        </label>
-                        <label class="flex items-center">
-                            <input type="radio" name="passengers" value="Group" class="mr-2 text-blue-500">
-                            Group (3-6)
-                        </label>
+                    <div class="flex justify-between items-center mb-4">
+                        <label class="block text-gray-300 text-xl font-orbitron">Personal Information</label>
+                        
+                    </div>
+                    <div id="passengersContainer" class="space-y-6">
+                        <!-- Passenger forms will be added here -->
                     </div>
                 </div>
 
-                <div id="accommodationSection" class="hidden mb-6">
-                    <label class="block text-gray-300 mb-3">Accommodation Type</label>
-                    <div id="accommodationOptions" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+                <!-- Special Requirements -->
+                <div>
+                    <label class="block text-gray-300 mb-2">Special Requirements</label>
+                    <textarea class="form-input w-full px-4 py-3" placeholder="Any special requirements or notes..."></textarea>
                 </div>
 
-                <div id="conditionalFields"></div>
-                </div>
-
-                <div class="mb-8">
-
-            <h1 class="font-orbitron text-3xl mb-2 text-glow">Personal Information</h1>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            <div>
-                <label class="block text-gray-300 mb-2">First Name</label>
-                <input type="text" class="form-input w-full px-4 py-3" placeholder="Enter your first name">
-            </div>
-
-            <div>
-                <label class="block text-gray-300 mb-2">Last Name</label>
-                <input type="text" class="form-input w-full px-4 py-3" placeholder="Enter your last name">
-            </div>
-
-            <div>
-                <label class="block text-gray-300 mb-2">Email Address</label>
-                <input type="email" class="form-input w-full px-4 py-3" placeholder="Select your email">
-            </div>
-
-            <div>
-                <label class="block text-gray-300 mb-2">Phone Number</label>
-                <input type="text" class="form-input w-full px-4 py-3" placeholder="Enter your phone number">
-            </div>
-
+                <button type="button" id="addPassenger" class="text-white w-full py-3 rounded-lg font-bold glow">
+                    Add Passenger
+                </button>
+                <div id="priceSummary" class="hidden mt-6"></div>
+                <!-- Submit Button -->
+                <button id="conf-booking" type="submit" class="btn-primary text-white w-full py-3 rounded-lg font-bold glow conf-booking">
+                    Confirm Booking
+                </button>
+            </form>
         </div>
-        <div>
-            <label class="block text-gray-300 mb-2">Special Requirements</label>
-            <textarea name="" id="" class="form-input w-full px-4 py-3"
-                placeholder="Any special requirements or notes..."></textarea>
-
-        </div>
-        <button type="submit"
-            class="border border-neon-blue text-neon-white px-6 py-3 rounded-lg font-bold hover:bg-neon-blue/10 transition-colors w-full ">
-            Add passanger
-        </button>
-
-        <button type="submit" class="btn-primary text-white w-full py-3 rounded-lg font-bold glow">
-            Login to Account
-        </button>
-        </form>
-
-        <div class="mt-6 pt-6 border-t border-neon-blue/20">
-            <p class="text-gray-400 text-center">
-                Don't have an account?
-                <a href="#" class="text-neon-blue hover:underline">Sign up now</a>
-            </p>
-        </div>
-        </div>
-
-
     </main>
 
     <!-- Footer -->
@@ -301,15 +273,14 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-4 md:mb-0">
                     <div class="flex items-center space-x-2 mb-2">
-                        <div
-                            class="w-8 h-8 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center">
                             <i class="fas fa-rocket text-white text-sm"></i>
                         </div>
                         <span class="font-orbitron text-lg">SpaceVoyager</span>
                     </div>
                     <p class="text-gray-400 text-sm">© 2023 SpaceVoyager. All rights reserved.</p>
                 </div>
-
+                
                 <div class="flex space-x-6 mb-4 md:mb-0">
                     <a href="#" class="text-gray-400 hover:text-neon-blue transition-colors text-xl">
                         <i class="fab fa-twitter"></i>
@@ -325,33 +296,6 @@
         </div>
     </footer>
 
-    <script>
-        // Create stars background
-        function createStars() {
-            const container = document.getElementById('stars-container');
-            const starCount = 150;
-
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
-
-                const size = Math.random() * 2 + 1;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-
-                star.style.animationDelay = `${Math.random() * 5}s`;
-
-                container.appendChild(star);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            createStars();
-        });
-    </script>
+    <script src="booking.js"></script>
 </body>
-
 </html>
