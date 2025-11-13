@@ -1,5 +1,5 @@
 let userData = [];
-fetch('user.json')
+fetch('data/user.json')
   .then(res => {
     if (!res.ok) throw new Error('Failed to load user data');
     return res.json();
@@ -70,12 +70,18 @@ window.initAuth = function () {
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
   const username = localStorage.getItem('username') || 'User';
 
+
+  const usernameDisplay = document.getElementById('username-display');
+  if (isLoggedIn && usernameDisplay) {
+    usernameDisplay.textContent = username;
+    usernameDisplay.classList.remove('hidden');
+  }
+
   const desktopLoginLink = document.querySelector('nav .hidden.md\\:flex a[href="login.html"]');
   if (desktopLoginLink && isLoggedIn) {
     desktopLoginLink.outerHTML = `
       <div class="flex items-center space-x-4">
-        <span class="text-neon-blue font-bold">${username}</span>
-        <button id="logout-btn-desktop" class="nav-link text-neon-purple hover:text-neon-blue transition-colors">Log out</button>
+        <button id="logout-btn-desktop" class="text-neon-blue font-bold">Log out</button>
       </div>
     `;
 
@@ -86,8 +92,7 @@ window.initAuth = function () {
   if (mobileLoginLink && isLoggedIn) {
     mobileLoginLink.outerHTML = `
       <div class="flex items-center justify-between py-2 border-b border-neon-blue/20">
-        <span class="text-neon-blue font-bold">${username}</span>
-        <button id="logout-btn-mobile" class="text-neon-purple hover:text-neon-blue">Log out</button>
+        <button id="logout-btn-mobile" class="text-neon-blue font-bold">Log out</button>
       </div>
     `;
 
