@@ -1,144 +1,59 @@
+// === STARS ANIMATION ===
 function createStars() {
   const container = document.getElementById('stars-container');
   const starCount = 150;
-
   for (let i = 0; i < starCount; i++) {
     const star = document.createElement('div');
     star.classList.add('star');
-
     const size = Math.random() * 2 + 1;
     star.style.width = `${size}px`;
     star.style.height = `${size}px`;
-
     star.style.left = `${Math.random() * 100}%`;
     star.style.top = `${Math.random() * 100}%`;
-
     star.style.animationDelay = `${Math.random() * 5}s`;
-
     container.appendChild(star);
   }
 }
 
+// === DATA LOADING ===
 let destinations = [];
 let accommodations = [];
-let passengerOptions = [];
-let departureLocations = [];
 
 async function loadData() {
   try {
-    // Load destinations
-    const destinationsResponse = await fetch('/data/destinations.json');
-    if (!destinationsResponse.ok) throw new Error('Failed to load destinations');
-    const destinationsData = await destinationsResponse.json();
+    const [destRes, accRes] = await Promise.all([
+      fetch('/data/destinations.json'),
+      fetch('/data/accomandations.json')
+    ]);
 
-    // Load accommodations
-    const accommodationsResponse = await fetch('/data/accomandations.json');
-    if (!accommodationsResponse.ok) throw new Error('Failed to load accommodations');
-    const accommodationsData = await accommodationsResponse.json();
+    if (!destRes.ok || !accRes.ok) throw new Error('Failed to load data');
 
-    // Load booking options (packages + departure locations)
-    const bookingOptionsResponse = await fetch('/data/booking-options.json');
-    if (!bookingOptionsResponse.ok) throw new Error('Failed to load booking options');
-    const bookingOptionsData = await bookingOptionsResponse.json();
+    const destData = await destRes.json();
+    const accData = await accRes.json();
 
-    // Assign data
-    destinations = destinationsData.destinations || [];
-    accommodations = accommodationsData.accommodations || [];
-    passengerOptions = bookingOptionsData.passengerOptions || [];
-    departureLocations = bookingOptionsData.departureLocations || [];
+    destinations = destData.destinations || [];
+    accommodations = accData.accommodations || [];
 
     console.log("Data loaded successfully");
     initForm();
-    updatePriceSummary();
   } catch (err) {
     console.error("Error loading data:", err);
-    alert("Unable to load booking data. Please check if the JSON files are available and the server is running.");
+    alert("Unable to load booking data. Please check JSON files.");
   }
 }
 
 // === DOM ELEMENTS ===
 const destinationSelect = document.getElementById('destination');
-const packageOptions = document.getElementById('packageOptions') || document.createElement('div'); // fallback
 const accommodationSection = document.getElementById('accommodationSection');
 const accommodationOptions = document.getElementById('accommodationOptions');
 const conditionalFields = document.getElementById('conditionalFields');
 const passengersContainer = document.getElementById('passengersContainer');
 const addPassengerBtn = document.getElementById('addPassenger');
 const bookingForm = document.getElementById('bookingForm');
-const departureLocationSelect = document.getElementById('departureLocation');
-const priceSummary = document.getElementById('priceSummary') || document.createElement('div');
+const priceSummary = document.getElementById('priceSummary');
+const submitBtn = document.getElementById('confbooking');
 
-// === INITIALIZATION ===
-function initForm() {
-  populateDestinations();
-  populateDepartureLocations();
-
-  // Initialiser avec 1 passager (Solo par défaut)
-  addPassenger();
-
-  // === ÉCOUTEURS D'ÉVÉNEMENTS ===
-  
-  // 1. Changement de destination
-  destinationSelect.addEventListener('change', () => {
-    handleDestinationChange();
-    updatePriceSummary();
-  });
-
-  // 2. Changement du nombre de passagers (radios)
-  document.querySelectorAll('input[name="passengers"]').forEach(radio => {
-    radio.addEventListener('change', () => {
-      handlePassengerChange();
-      updatePriceSummary();
-    });
-  });
-
-  // 3. Bouton "Add Passenger" (au cas où)
-  addPassengerBtn.addEventListener('click', () => {
-    addPassenger();
-    updatePriceSummary();
-  });
-
-  // 4. Soumission du formulaire
-  bookingForm.addEventListener('submit', handleSubmit);
-
-  // === INITIALISATION FINALE ===
-  // Forcer le rafraîchissement du prix au démarrage (au cas où)
-  setTimeout(() => {
-    updatePriceSummary();
-  }, 100);
-  // Dans initForm(), après les autres listeners
-accommodationOptions.addEventListener('click', updatePriceSummary);
-}
-
-// Populate destinations
-function populateDestinations() {
-  destinationSelect.innerHTML = '<option value="">Select a destination</option>';
-
-  destinations.forEach(dest => {
-    const option = new Option(
-      `${dest.name} - ${formatPrice(dest.price)} - ${dest.travelDuration}`,
-      dest.id
-    );
-    destinationSelect.appendChild(option);
-  });
-}
-
-// Populate departure locations
-function populateDepartureLocations() {
-  if (!departureLocationSelect) return;
-
-  departureLocationSelect.innerHTML = '';
-
-  departureLocations.forEach(location => {
-    const option = new Option(
-      `${location.name} (${location.location})`,
-      location.id
-    );
-    departureLocationSelect.appendChild(option);
-  });
-}
-
-// Format price
+// === UTILS ===
 function formatPrice(price) {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -153,37 +68,39 @@ function createPassengerForm(index) {
   div.className = 'passenger-card content-card p-6 space-y-4';
   div.innerHTML = `
     <div class="flex justify-between items-center">
-     
+      <h3 class="font-semibold text-lg">Passenger ${index}</h3>
       ${index > 1 ? '<button type="button" class="remove-passenger text-red-400 text-sm hover:underline">Remove</button>' : ''}
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
+      <div class="relative">
         <label class="block text-gray-300 mb-2">First Name</label>
-        <input type="text" placeholder="Enter your first name" class="form-input w-full px-4 py-3"/>
+        <input type="text" data-field="firstName" placeholder="Enter first name" class="form-input w-full px-4 py-3" required />
+        <p class="feedback text-xs mt-1 hidden"></p> <!-- CHANGÉ ICI -->
       </div>
-      <div>
+      <div class="relative">
         <label class="block text-gray-300 mb-2">Last Name</label>
-        <input type="text" placeholder="Enter your last name" class="form-input w-full px-4 py-3"/>
+        <input type="text" data-field="lastName" placeholder="Enter last name" class="form-input w-full px-4 py-3" required />
+        <p class="feedback text-xs mt-1 hidden"></p> <!-- CHANGÉ ICI -->
       </div>
-      <div>
+      <div class="relative">
         <label class="block text-gray-300 mb-2">Email Address</label>
-        <input type="email" placeholder="Enter your email" class="form-input w-full px-4 py-3"/>
+        <input type="email" data-field="email" placeholder="Enter email" class="form-input w-full px-4 py-3" required />
+        <p class="feedback text-xs mt-1 hidden"></p> <!-- CHANGÉ ICI -->
       </div>
-      <div>
+      <div class="relative">
         <label class="block text-gray-300 mb-2">Phone Number</label>
-        <input type="tel" placeholder="Enter your phone number" class="form-input w-full px-4 py-3" />
+        <input type="tel" data-field="phone" placeholder="Enter phone" class="form-input w-full px-4 py-3" />
+        <p class="feedback text-xs mt-1 hidden"></p> <!-- CHANGÉ ICI -->
       </div>
     </div>
   `;
 
-  // Add remove handler
   const removeBtn = div.querySelector('.remove-passenger');
   if (removeBtn) {
     removeBtn.addEventListener('click', () => {
       div.remove();
       updatePassengerLabels();
-      updatePassengerCount();
-      updatePriceSummary();
+      updateSubmitButtonLive();
     });
   }
 
@@ -194,8 +111,7 @@ function addPassenger() {
   const count = passengersContainer.children.length + 1;
   const form = createPassengerForm(count);
   passengersContainer.appendChild(form);
-  updatePassengerCount();
-  updatePriceSummary();
+  updatePassengerLabels();
 }
 
 function updatePassengerLabels() {
@@ -204,60 +120,48 @@ function updatePassengerLabels() {
   });
 }
 
-function updatePassengerCount() {
-  const passengerCount = passengersContainer.children.length;
-  // Used in validation and price
-}
+// === PASSENGER RADIO HANDLING ===
+function handlePassengerChange() {
+  const radio = document.querySelector('input[name="passengers"]:checked');
+  if (!radio) return;
 
-// === DYNAMIC LOGIC: DESTINATION CHANGE ===
-function handleDestinationChange() {
-  const dest = destinations.find(d => d.id === destinationSelect.value);
-  packageOptions.innerHTML = '';
-  accommodationSection.classList.add('hidden');
-  conditionalFields.innerHTML = '';
+  let targetCount = radio.value === "3-6" ? 3 : parseInt(radio.value);
+  const currentCount = passengersContainer.children.length;
+
+  while (currentCount < targetCount) addPassenger();
+  while (currentCount > targetCount) passengersContainer.lastChild?.remove();
+
+  updatePassengerLabels();
   updatePriceSummary();
-
-  if (!dest) return;
-
-  // Show passenger package options
-  renderPackageOptions(dest);
-  updateAccommodations(dest);
-  updateConditionalFields(dest);
-
-  // Auto-select first package
-  setTimeout(() => {
-  const firstCard = packageOptions.querySelector('.package-card');
-  if (firstCard) {
-    // Simule un clic complet
-    const radio = firstCard.querySelector('input[name="package"]');
-    updatePriceSummary(); // Appelle ici
-  }
-}, 0);
+  updateSubmitButton();
 }
 
-// === ACCOMMODATIONS ===
+// === DESTINATION & ACCOMMODATION ===
+function populateDestinations() {
+  destinationSelect.innerHTML = '<option value="">Select a destination</option>';
+  destinations.forEach(dest => {
+    const opt = new Option(`${dest.name} - ${formatPrice(dest.price)} - ${dest.travelDuration}`, dest.id);
+    destinationSelect.appendChild(opt);
+  });
+}
+
 function updateAccommodations(dest) {
   accommodationOptions.innerHTML = '';
   const available = accommodations.filter(acc => acc.availableOn.includes(dest.id));
 
   if (available.length === 0) {
     accommodationSection.classList.add('hidden');
-    updatePriceSummary();
     return;
   }
 
   available.forEach((acc, i) => {
     const card = document.createElement('div');
-    card.className = `accommodation-card content-card p-4 text-center cursor-pointer transition-all ${
-      i === 0 ? 'border-2 border-neon-blue' : 'border border-neon-blue/30'
-    }`;
+    card.className = `accommodation-card content-card p-4 text-center cursor-pointer transition-all ${i === 0 ? 'border-2 border-neon-blue' : 'border border-neon-blue/30'}`;
     card.innerHTML = `
       <input type="radio" name="accommodation" value="${acc.id}" class="hidden" ${i === 0 ? 'checked' : ''}>
       <h4 class="font-bold capitalize mb-2 text-cyan-400">${acc.name}</h4>
       <p class="text-xs text-gray-400 mb-2">${acc.shortDescription || acc.description}</p>
-      <div class="text-sm text-cyan-300 mt-2">
-        ${formatPrice(acc.pricePerDay)}/day
-      </div>
+      <div class="text-sm text-cyan-300 mt-2">${formatPrice(acc.pricePerDay)}/day</div>
     `;
 
     card.addEventListener('click', () => {
@@ -269,36 +173,21 @@ function updateAccommodations(dest) {
       card.classList.add('border-2', 'border-neon-blue');
       card.querySelector('input').checked = true;
       updatePriceSummary();
+      updateSubmitButton();
     });
 
     accommodationOptions.appendChild(card);
   });
 
-  // AFFICHE LA SECTION
   accommodationSection.classList.remove('hidden');
-
-  // Auto-sélectionne le premier
   setTimeout(() => {
-    const firstCard = accommodationOptions.querySelector('.accommodation-card');
-    if (firstCard) firstCard.click();
+    const first = accommodationOptions.querySelector('.accommodation-card');
+    if (first) first.click();
   }, 0);
 }
 
-// === CONDITIONAL FIELDS ===
 function updateConditionalFields(dest) {
   conditionalFields.innerHTML = '';
-
-  // Moon: Spacesuit size
-  if (dest.id === 'moon' && (dest.activities || []).includes('Spacewalk experience')) {
-    const field = document.createElement('div');
-    field.className = 'mb-6';
-    field.innerHTML = `
-    `;
-    conditionalFields.appendChild(field);
-  }
-
-
-  // Europa/Titan: Radiation insurance
   if (['europa', 'titan'].includes(dest.id)) {
     const field = document.createElement('div');
     field.className = 'mb-6';
@@ -313,107 +202,282 @@ function updateConditionalFields(dest) {
   }
 }
 
-// === FORM SUBMISSION ===
+// === PRICE CALCULATION ===
+function updatePriceSummary() {
+  if (!priceSummary) return;
+
+  const destination = destinations.find(d => d.id === destinationSelect.value);
+  const accInput = document.querySelector('input[name="accommodation"]:checked');
+  const passengerRadio = document.querySelector('input[name="passengers"]:checked');
+
+  if (!destination || !passengerRadio || !accInput) {
+    priceSummary.classList.add('hidden');
+    return;
+  }
+
+  const passengerCount = passengerRadio.value === "3-6" ? 3 : parseInt(passengerRadio.value);
+  const acc = accommodations.find(a => a.id === accInput.value);
+  if (!acc) return;
+
+  const days = destination.travelDuration.match(/(\d+)/)?.[1] ? parseInt(destination.travelDuration.match(/(\d+)/)[1]) : 1;
+  const travelPrice = destination.price * 2;
+  const stayPrice = acc.pricePerDay * days;
+  const totalPerPerson = travelPrice + stayPrice;
+  const totalPrice = totalPerPerson * passengerCount;
+
+  priceSummary.innerHTML = `
+    <div class="bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 rounded-xl p-6 text-center border border-neon-blue/50">
+      <h3 class="font-orbitron text-2xl text-glow text-cyan-300 mb-2">Total Price</h3>
+      <p class="text-4xl font-bold text-white tracking-wider">${formatPrice(totalPrice)}</p>
+      <p class="text-sm text-gray-400 mt-2">
+        ${passengerCount} × (${formatPrice(travelPrice)} travel + ${formatPrice(stayPrice)} stay)
+      </p>
+    </div>
+  `;
+  priceSummary.classList.remove('hidden');
+}
+
+
+
+
+function getRequiredMessage(field) {
+  const map = { firstName: "First name", lastName: "Last name", email: "Email" };
+  return `${map[field] || field} is required`;
+}
+
+function validateDepartureDate() {
+  const input = document.getElementById('departureDate');
+  const error = document.getElementById('departureDateError');
+  const date = new Date(input.value);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const max = new Date(today); max.setDate(today.getDate() + 30);
+
+  if (!input.value) { showInlineError(error, "Please select a departure date"); return false; }
+  if (date < today) { showInlineError(error, "Date must be in the future"); return false; }
+  if (date > max) { showInlineError(error, "Booking max 30 days in advance"); return false; }
+  clearInlineError(error);
+  return true;
+}
+
+
+
+// === EVENT LISTENERS ===
+function initForm() {
+  populateDestinations();
+  addPassenger(); // Solo par défaut
+
+  destinationSelect.addEventListener('change', () => {
+    const dest = destinations.find(d => d.id === destinationSelect.value);
+    accommodationSection.classList.add('hidden');
+    conditionalFields.innerHTML = '';
+    if (dest) {
+      updateAccommodations(dest);
+      updateConditionalFields(dest);
+      handlePassengerChange();
+    }
+    updatePriceSummary();
+  });
+
+  document.querySelectorAll('input[name="passengers"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      handlePassengerChange();
+      updatePriceSummary();
+    });
+  });
+
+  addPassengerBtn.addEventListener('click', () => {
+    addPassenger();
+    updatePriceSummary();
+  });
+
+  // Real-time validation
+  document.addEventListener('input', e => {
+    if (e.target.matches('input[data-field]')) {
+      validateField(e.target);
+    }
+  });
+
+  document.addEventListener('change', e => {
+    if (e.target.matches('#departureDate')) {
+      validateDepartureDate();
+    }
+    if (e.target.matches('input[name="accommodation"]')) {
+      updatePriceSummary();
+    }
+  });
+
+  bookingForm.addEventListener('submit', handleSubmit);
+}
+
+// === SUBMIT ===
 function handleSubmit(e) {
   e.preventDefault();
 
-  const selectedDestination = destinationSelect.value;
-  const selectedPackageInput = document.querySelector('input[name="package"]:checked');
-  const passengerCount = passengersContainer.children.length;
-
-  if (!selectedDestination) return alert('Please select a destination');
-  if (!selectedPackageInput) return alert('Please select a passenger package');
-
-  const packageData = passengerOptions.find(p => p.id === selectedPackageInput.value);
-  if (passengerCount < packageData.minPassengers || passengerCount > packageData.maxPassengers) {
-    return alert(`This package requires between ${packageData.minPassengers} and ${packageData.maxPassengers} passengers`);
+  // Valide la date
+  if (!validateDepartureDate()) {
+    alert("Please fix the departure date.");
+    return;
   }
 
-  const destination = destinations.find(d => d.id === selectedDestination);
-  const approximatePrice = destination.price * packageData.basePriceMultiplier;
+  // Vérifie les champs live
+  let allValid = true;
+  passengersContainer.querySelectorAll('input[data-field]').forEach(input => {
+    if (!validateFieldLive(input)) allValid = false;
+  });
+
+  if (!allValid) {
+    alert("Please fix all errors before submitting.");
+    return;
+  }
+
+  // Tout bon → confirmation
+  const dest = destinations.find(d => d.id === destinationSelect.value);
+  const acc = document.querySelector('input[name="accommodation"]:checked');
+  const accName = acc ? accommodations.find(a => a.id === acc.value)?.name : 'None';
 
   alert(
     `Booking Confirmed!\n\n` +
-    `Destination: ${destination.name}\n` +
-    `Package: ${packageData.name}\n` +
-    `Passengers: ${passengerCount}\n` +
-    `Approximate Price: ${formatPrice(approximatePrice)}\n\n` +
+    `Destination: ${dest.name}\n` +
+    `Departure: ${document.getElementById('departureDate').value}\n` +
+    `Passengers: ${passengersContainer.children.length}\n` +
+    `Accommodation: ${accName}\n\n` +
     `You are going to space!`
   );
-
-  console.log('Booking submitted:', { destination: selectedDestination, package: selectedPackageInput.value, passengers: passengerCount });
 }
 
-// === STARTUP ===
+// === START ===
 document.addEventListener('DOMContentLoaded', () => {
   createStars();
   loadData();
 });
 
-function updatePriceSummary() {
-  const priceSummary = document.getElementById('priceSummary');
-  if (!priceSummary) return;
+// === VALIDATION NOM & PRÉNOM : 3+ lettres, pas de chiffres ===
+function isValidName(name) {
+  return /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]{3,}$/.test(name);
+}
 
-  const destination = destinations.find(d => d.id === destinationSelect.value);
-  const selectedAccommodationInput = document.querySelector('input[name="accommodation"]:checked');
-  const passengerRadio = document.querySelector('input[name="passengers"]:checked');
+// === VALIDATION LIVE ===
+function validateFieldLive(input) {
+  const value = input.value.trim();
+  const field = input.dataset.field;
+  const feedback = input.parentElement.querySelector('.feedback');
 
-  if (!destination || !passengerRadio || !selectedAccommodationInput) {
-    priceSummary.classList.add('hidden');
-    return;
+  // Champ vide + requis
+  if (!value && input.hasAttribute('required')) {
+    showFeedback(feedback, getRequiredMessage(field), 'red');
+    return false;
   }
 
-  // --- NOMBRE DE PASSAGERS ---
-  let passengerCount;
-  if (passengerRadio.value === "3-6") {
-    passengerCount = 3; // ou 6
+  // NOM & PRÉNOM
+  if (['firstName', 'lastName'].includes(field) && value) {
+    if (isValidName(value)) {
+      showFeedback(feedback, 'Looks good', 'green');
+      return true;
+    } else {
+      showFeedback(feedback, 'Looks bad', 'red');
+      return false;
+    }
+  }
+
+  // EMAIL
+  if (field === 'email' && value) {
+    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    showFeedback(feedback, isValid ? 'Valid email' : 'Invalid email format', isValid ? 'green' : 'red');
+    return isValid;
+  }
+
+  // PHONE
+  if (field === 'phone' && value) {
+    if (!/^\+?[\d\s\-\(\)]{10,15}$/.test(value)) {
+      showFeedback(feedback, 'Invalid phone format', 'red');
+      return false;
+    }
+  }
+
+  // Tout bon
+  if (value) {
+    showFeedback(feedback, 'Looks good', 'green');
+    return true;
+  }
+
+  hideFeedback(feedback);
+  return true;
+}
+
+// === VALIDATION LIVE COMME LOGIN ===
+function showFeedback(el, msg, type) {
+  el.textContent = msg;
+  el.className = `feedback show ${type === 'red' ? 'red' : 'green'}`;
+}
+
+function hideFeedback(el) {
+  el.classList.remove('show');
+  el.textContent = '';
+}
+
+function getRequiredMessage(field) {
+  const map = { firstName: "First name is required", lastName: "Last name is required", email: "Email is required" };
+  return map[field] || `${field} is required`;
+}
+
+function validateFieldLive(input) {
+  const value = input.value.trim();
+  const field = input.dataset.field;
+  const feedback = input.parentElement.querySelector('.feedback');
+
+  if (!value && input.hasAttribute('required')) {
+    showFeedback(feedback, getRequiredMessage(field), 'red');
+    return false;
+  }
+
+  if (field === 'email' && value) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      showFeedback(feedback, 'Invalid email format', 'red');
+      return false;
+    } else {
+      showFeedback(feedback, 'Valid email', 'green');
+      return true;
+    }
+  }
+
+  if (field === 'phone' && value) {
+    if (!/^\+?[\d\s\-\(\)]{10,15}$/.test(value)) {
+      showFeedback(feedback, 'Invalid phone format', 'red');
+      return false;
+    }
+  }
+
+  if (value && ['firstName', 'lastName'].includes(field)) {
+    showFeedback(feedback, 'Looks good', 'green');
   } else {
-    passengerCount = parseInt(passengerRadio.value);
+    hideFeedback(feedback);
   }
 
-  // --- HÉBERGEMENT ---
-  const acc = accommodations.find(a => a.id === selectedAccommodationInput.value);
-  if (!acc) return;
-
-  // --- DURÉE EN JOURS ---
-  const durationMatch = destination.travelDuration.match(/(\d+)/);
-  const days = durationMatch ? parseInt(durationMatch[1]) : 1;
-
-  // --- CALCUL ---
-  // Prix voyage (aller-retour)
-  const travelPrice = destination.price * 2;
-
-  // Prix hébergement
-  const accommodationPrice = acc.pricePerDay * days;
-
-  // Total par personne
-  const pricePerPerson = travelPrice + accommodationPrice;
-
-  // Total final
-  const totalPrice = pricePerPerson * passengerCount;
-
-  // --- AFFICHAGE ---
-  priceSummary.innerHTML = `
-    <div class="bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 rounded-xl p-6 text-center border border-neon-blue/50">
-      <h3 class="font-orbitron text-2xl text-glow text-cyan-300 mb-2">Total Price</h3>
-      <p class="text-4xl font-bold text-white tracking-wider">${formatPrice(totalPrice)}</p>
-      
-    </div>
-  `;
-
-  priceSummary.classList.remove('hidden');
+  return true;
 }
 
-function handleDestinationChange() {
-  const dest = destinations.find(d => d.id === destinationSelect.value);
-  accommodationSection.classList.add('hidden');
-  conditionalFields.innerHTML = '';
-  updatePriceSummary();
+function updateSubmitButtonLive() {
+  const hasErrors = document.querySelectorAll('.feedback.red.show').length > 0;
+  const requiredFilled = 
+    destinationSelect.value &&
+    document.getElementById('departureDate').value &&
+    document.querySelector('input[name="passengers"]:checked') &&
+    (!accommodationSection.classList.contains('hidden') ? document.querySelector('input[name="accommodation"]:checked') : true);
 
-  if (!dest) return;
-
-  updateAccommodations(dest);     // Affiche accommodation
-  updateConditionalFields(dest);  // Assurance si Europa/Titan
-  handlePassengerChange();        // Ajuste passagers
-  updatePriceSummary();           // Recalcule
+  submitBtn.disabled = hasErrors || !requiredFilled;
 }
+
+// === LISTENERS LIVE ===
+document.addEventListener('input', e => {
+  if (e.target.matches('input[data-field]')) {
+    validateFieldLive(e.target);
+    updateSubmitButtonLive();
+  }
+});
+
+document.addEventListener('blur', e => {
+  if (e.target.matches('input[data-field]')) {
+    validateFieldLive(e.target);
+    updateSubmitButtonLive();
+  }
+}, true);
