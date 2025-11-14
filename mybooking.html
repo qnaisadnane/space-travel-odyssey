@@ -1,33 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Bookings - SpaceVoyager</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Booking - SpaceVoyager</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'space-dark': '#0a0a18',
+            'space-blue': '#1a1a2e',
+            'space-purple': '#16213e',
+            'neon-blue': '#0ea5e9',
+            'neon-purple': '#8b5cf6',
+            'neon-cyan': '#06b6d4',
+          },
+          fontFamily: {
+            'orbitron': ['Orbitron', 'sans-serif'],
+            'exo': ['Exo 2', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
   <style>
-    body { background: linear-gradient(to bottom, #0a0a18, #1a1a2e, #16213e); }
-    .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 5s infinite; }
-    @keyframes twinkle { 0%,100% { opacity: 0.2; } 50% { opacity: 1; } }
-    .content-card { background: rgba(26,26,46,0.7); backdrop-filter: blur(10px); border: 1px solid rgba(14,165,233,0.3); border-radius: 15px; }
-    .text-glow { text-shadow: 0 0 10px rgba(14,165,233,0.7); }
+    body {
+      background: linear-gradient(to bottom, #0a0a18, #1a1a2e, #16213e);
+      background-attachment: fixed;
+    }
+
+    .star {
+      position: absolute;
+      background-color: white;
+      border-radius: 50%;
+      animation: twinkle 5s infinite;
+    }
+
+    @keyframes twinkle {
+
+      0%,
+      100% {
+        opacity: 0.2;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    .glow {
+      box-shadow: 0 0 15px rgba(14, 165, 233, 0.5);
+    }
+
+    .text-glow {
+      text-shadow: 0 0 10px rgba(14, 165, 233, 0.7);
+    }
+
+    .content-card {
+      background: rgba(26, 26, 46, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      border-radius: 15px;
+    }
+
+    .nav-link {
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(to right, #0ea5e9, #8b5cf6);
+      transition: width 0.3s ease;
+    }
+
+    .conf-booking:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .login-card {
+      background: rgba(26, 26, 46, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      border-radius: 15px;
+    }
+
+    .form-input {
+      background: rgba(22, 33, 62, 0.5);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      border-radius: 8px;
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      border-color: rgba(14, 165, 233, 0.7);
+      box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+      outline: none;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #0ea5e9, #8b5cf6);
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #0ea5e9, #8b5cf6);
+    }
+
+    .error-message {
+      display: none;
+      color: #ff0000;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    .error-message.show {
+      display: block !important;
+    }
+
+    .feedback {
+      display: none;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    .feedback.show {
+      display: block !important;
+    }
+
+    .feedback.red {
+      color: #f87171;
+    }
+
+    .feedback.green {
+      color: #34d399;
+    }
+
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #0ea5e9;
+    }
   </style>
 </head>
+
 <body class="text-white font-exo min-h-screen">
+
+
   <div id="stars-container"></div>
 
   <nav class="bg-space-dark/80 backdrop-blur-md border-b border-neon-blue/20 sticky top-0 z-50">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-      <a href="index.html" class="font-orbitron text-xl font-bold text-glow">SpaceVoyager</a>
-      <a href="booking.html" class="text-neon-blue">New Booking</a>
+      <div class="flex items-center space-x-3">
+        <div
+          class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center glow">
+          <i class="fas fa-rocket text-white"></i>
+        </div>
+        <a href="index.html" class="font-orbitron text-xl font-bold text-glow">SpaceVoyager</a>
+      </div>
+
+      <div class="hidden md:flex space-x-8">
+        <a href="index.html" class="nav-link hover:text-neon-blue transition-colors">Home</a>
+        <a href="destinations.html" class="nav-link hover:text-neon-blue transition-colors">Destinations</a>
+        <a href="booking.html" class="nav-link hover:text-neon-blue transition-colors">Booking</a>
+        <a href="about.html" class="nav-link hover:text-neon-blue transition-colors">About</a>
+        <a href="login.html" class="nav-link hover:text-neon-blue transition-colors text-neon-blue">Login</a>
+      </div>
+
+      <div class="md:hidden">
+        <button class="text-white focus:outline-none">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+      </div>
     </div>
   </nav>
 
   <main class="container mx-auto px-4 py-12 relative z-10">
     <h1 class="font-orbitron text-4xl text-center mb-8 text-glow">My Bookings</h1>
-    <div id="bookingsList" class="space-y-6"></div>
+
+    <div id="myBookingsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6"></div>
+
   </main>
 
   <script>
@@ -44,43 +241,77 @@
       }
     }
 
-    function displayBookings() {
-      const bookings = JSON.parse(localStorage.getItem('spaceBookings') || '[]');
-      const list = document.getElementById('bookingsList');
+    document.addEventListener('DOMContentLoaded', () => {
+      createStars();
+      loadBookings();
+    });
+  </script>
+
+  <script>
+    function loadBookings() {
+      const container = document.getElementById("myBookingsContainer");
+      const bookings = JSON.parse(localStorage.getItem("spaceBookings") || "[]");
 
       if (bookings.length === 0) {
-        list.innerHTML = '<p class="text-center text-gray-400">No bookings yet.</p>';
+        container.innerHTML = `
+        <p class="text-center text-gray-300 text-lg">No bookings yet.</p>
+      `;
         return;
       }
 
-      list.innerHTML = bookings.map(b => `
-        <div class="content-card p-6">
-          <div class="flex justify-between items-start mb-4">
-            <div>
-              <h3 class="font-orbitron text-xl text-glow">${b.destination}</h3>
-              <p class="text-sm text-gray-300">Departure: ${b.departureDate}</p>
-            </div>
-            <span class="text-neon-blue font-bold">#${b.id.slice(0,8)}</span>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <p><strong>Passengers:</strong> ${b.passengers}</p>
-              <p><strong>Accommodation:</strong> ${b.accommodation}</p>
-            </div>
-            <div>
-              <p><strong>Status:</strong> <span class="text-green-400">Confirmed</span></p>
-              <p><strong>Total:</strong> ${b.totalPrice}</p>
-            </div>
-          </div>
-          ${b.isGuest ? '<p class="text-yellow-400 text-xs mt-2">Guest Booking</p>' : ''}
-        </div>
-      `).join('');
+      container.innerHTML = "";
+
+      bookings.forEach(b => {
+        const card = document.createElement("div");
+        card.className = "content-card p-6 rounded-xl border border-neon-blue/40";
+
+        card.innerHTML = `
+  <div class="flex justify-between items-center">
+    <h2 class="text-xl font-orbitron text-neon-blue mb-3">${b.destination.name}</h2>
+
+    <button onclick="confirmDelete('${b.id}')" 
+      class="px-3 py-1 bg-red-500/80 hover:bg-red-600 text-white rounded-lg text-sm transition">
+      <i class="fas fa-trash"></i> Delete
+    </button>
+  </div>
+
+  <p><strong>Date:</strong> ${b.departureDate}</p>
+  <p><strong>Passengers:</strong> ${b.totalPassengers}</p>
+  <p><strong>Accommodation:</strong> ${b.accommodation.name}</p>
+
+  <h3 class="mt-4 font-semibold">Passenger Details:</h3>
+  ${b.passengers.map(p => `
+    <div class="p-2 mt-2 border border-neon-blue/20 rounded-lg">
+      <p>${p.firstName} ${p.lastName}</p>
+      <p class="text-gray-300">${p.email}</p>
+      <p class="text-gray-400">${p.phone || "No phone"}</p>
+    </div>
+  `).join("")}
+`;
+
+        container.appendChild(card);
+      });
+    }
+  </script>
+
+  <script>
+    function confirmDelete(id) {
+      if (confirm("Do you want to delete this booking ")) {
+        deleteBooking(id);
+      }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      createStars();
-      displayBookings();
-    });
+    function deleteBooking(id) {
+      let bookings = JSON.parse(localStorage.getItem("spaceBookings") || "[]");
+
+      bookings = bookings.filter(b => b.id !== id);
+
+      localStorage.setItem("spaceBookings", JSON.stringify(bookings));
+
+      loadBookings();
+    }
   </script>
+
 </body>
+
 </html>

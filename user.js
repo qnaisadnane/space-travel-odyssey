@@ -47,6 +47,16 @@ function checkInput(input, correctValue, feedbackId, flag) {
   };
 }
 
+// Après login réussi
+const pending = sessionStorage.getItem('pendingBooking');
+if (pending) {
+  const booking = JSON.parse(pending);
+  booking.isGuest = false;
+  saveBooking(booking);
+  sessionStorage.removeItem('pendingBooking');
+  alert("Your pending booking has been saved!");
+}
+
 function startLiveChecks() {
   if (!userData.length) return;
   const { email: correctEmail, password: correctPassword } = userData[0];
