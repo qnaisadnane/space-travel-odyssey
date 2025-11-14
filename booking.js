@@ -435,7 +435,7 @@ bookingForm.addEventListener("submit", function (e) {
     departureDate: document.getElementById("departureDate").value,
     totalPassengers: passengerCount,
     insurance: !!insurance?.checked,
-    totalPrice: finalTotal,
+    totalPrice: formatPrice(totalPrice),
     createdAt: new Date().toISOString()
   };
 

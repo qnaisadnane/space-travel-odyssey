@@ -265,11 +265,11 @@
         const card = document.createElement("div");
         card.className = "content-card p-6 rounded-xl border border-neon-blue/40";
 
-        card.innerHTML = `
+       card.innerHTML = `
   <div class="flex justify-between items-center">
     <h2 class="text-xl font-orbitron text-neon-blue mb-3">${b.destination.name}</h2>
 
-    <button onclick="confirmDelete('${b.id}')" 
+    <button onclick="confirmDelete('${b.id}')"
       class="px-3 py-1 bg-red-500/80 hover:bg-red-600 text-white rounded-lg text-sm transition">
       <i class="fas fa-trash"></i> Delete
     </button>
@@ -277,14 +277,18 @@
 
   <p><strong>Date:</strong> ${b.departureDate}</p>
   <p><strong>Passengers:</strong> ${b.totalPassengers}</p>
-  <div id="destinationPriceDisplay" class="hidden">
-    <div class="bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 rounded-xl p-4 text-center border border-neon-blue/50 mb-6">
-        <p id="destinationPriceText" class="text-3xl font-bold text-white"></p>
-    </div>
-</div>
+
   <p><strong>Accommodation:</strong> ${b.accommodation.name}</p>
 
+  <!-- ⭐ TOTAL PRICE CARD -->
+  <div class="bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 
+              rounded-xl p-4 text-center border border-neon-blue/50 my-4">
+      <p class="text-xl font-orbitron text-cyan-300">Total Price</p>
+      <p class="text-3xl font-bold text-white mt-2">${b.totalPrice}</p>
+  </div>
+
   <h3 class="mt-4 font-semibold">Passenger Details:</h3>
+
   ${b.passengers.map(p => `
     <div class="p-2 mt-2 border border-neon-blue/20 rounded-lg">
       <p>${p.firstName} ${p.lastName}</p>
@@ -293,6 +297,7 @@
     </div>
   `).join("")}
 `;
+
 
         container.appendChild(card);
       });
