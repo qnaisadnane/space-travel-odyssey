@@ -44,15 +44,8 @@
         }
 
         @keyframes twinkle {
-
-            0%,
-            100% {
-                opacity: 0.2;
-            }
-
-            50% {
-                opacity: 1;
-            }
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
         }
 
         .glow {
@@ -85,10 +78,23 @@
             transition: width 0.3s ease;
         }
 
-        .conf-booking:disabled {
-            opacity: 0.7;
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #0ea5e9, #8b5cf6);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
             cursor: not-allowed;
-            transform: none !important;
         }
 
         .login-card {
@@ -112,44 +118,9 @@
             outline: none;
         }
 
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .btn-primary {
-            background: linear-gradient(to right, #0ea5e9, #8b5cf6);
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
-        }
-
-        .login-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        .timeline-item {
-            position: relative;
-            padding-left: 2rem;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: linear-gradient(to bottom, #0ea5e9, #8b5cf6);
-        }
-
         .error-message {
             display: none;
-            color: #ff0000;
+            color: #f87171;
             font-size: 0.75rem;
             margin-top: 0.25rem;
         }
@@ -176,15 +147,82 @@
             color: #34d399;
         }
 
-        .timeline-item::after {
+        /* Custom Radio Buttons */
+        .radio-option {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .radio-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            border: 2px solid rgba(14, 165, 233, 0.3);
+            border-radius: 12px;
+            background: rgba(22, 33, 62, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .radio-option input[type="radio"]:checked + .radio-label {
+            border-color: #0ea5e9;
+            background: rgba(14, 165, 233, 0.2);
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+        }
+
+        .radio-option:hover .radio-label {
+            border-color: rgba(14, 165, 233, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(14, 165, 233, 0.5);
+            border-radius: 50%;
+            position: relative;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option input[type="radio"]:checked + .radio-label .radio-circle {
+            border-color: #0ea5e9;
+            background: rgba(14, 165, 233, 0.3);
+        }
+
+        .radio-option input[type="radio"]:checked + .radio-label .radio-circle::after {
             content: '';
             position: absolute;
-            left: -4px;
-            top: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 10px;
             height: 10px;
             border-radius: 50%;
             background: #0ea5e9;
+            box-shadow: 0 0 10px #0ea5e9;
+        }
+
+        .radio-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .radio-title {
+            font-weight: 600;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .radio-description {
+            font-size: 0.875rem;
+            color: #94a3b8;
         }
     </style>
 </head>
@@ -196,14 +234,11 @@
     <nav class="bg-space-dark/80 backdrop-blur-md border-b border-neon-blue/20 sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div
-                    class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center glow">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center glow">
                     <i class="fas fa-rocket text-white"></i>
                 </div>
                 <a href="index.html" class="font-orbitron text-xl font-bold text-glow">SpaceVoyager</a>
             </div>
-
-            <div id="username-display" class="hidden text-neon-blue font-bold text-lg"></div>
 
             <div class="hidden md:flex space-x-8">
                 <a href="index.html" class="nav-link hover:text-neon-blue transition-colors">Home</a>
@@ -226,22 +261,23 @@
     <main class="container mx-auto px-4 py-8 relative z-10">
         <!-- Page Header -->
         <section class="py-12 text-center">
-            <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4">Book Your Space Journey</h1>
+            <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4 text-glow">Book Your Space Journey</h1>
             <p class="text-lg max-w-2xl mx-auto text-gray-300">
-                Begin your adventure to the stars. Fill out the form below to reserve your spot on our next space
-                voyage.
+                Begin your adventure to the stars. Fill out the form below to reserve your spot on our next space voyage.
             </p>
         </section>
 
         <!-- Booking Form -->
         <div class="login-card p-8 mx-4 md:mx-32 mb-12">
             <div class="mb-8">
-                <h1 class="font-orbitron text-3xl mb-2 text-glow">Journey Details</h1>
+                <h2 class="font-orbitron text-3xl mb-2 text-glow">Journey Details</h2>
+                <p class="text-gray-400 text-sm">Please fill in all required fields marked with </p>
             </div>
 
-            <form id="bookingForm" class="space-y-6">
+            <form id="bookingForm" class="space-y-8">
+                <!-- Destination -->
                 <div>
-                    <label class="block text-gray-300 mb-2">Destination</label>
+                    <label class="block text-gray-300 mb-2 font-semibold">Destination </label>
                     <select id="destination" class="form-input w-full px-4 py-3" required>
                         <option value="">Select a destination</option>
                     </select>
@@ -249,64 +285,86 @@
 
                 <!-- Departure Date -->
                 <div>
-                    <label class="block text-gray-300 mb-2">Departure Date</label>
+                    <label class="block text-gray-300 mb-2 font-semibold">Departure Date</label>
                     <input type="date" id="departureDate" class="form-input w-full px-4 py-3" required>
+                    <p id="departureDateError" class="error-message"></p>
                 </div>
 
-                <label class="text-xl">Number of Passengers</label>
-                <div class="flex flex-wrap gap-3 py-4 radio-op">
-                    <div class="flex gap-2">
-                        <input type="radio" name="passengers" id="solo" value="1" checked required />
-                        <label for="solo">Solo Traveler (1)</label>
-                    </div>
-                    <div class="flex gap-2">
-                        <input type="radio" name="passengers" id="couple" value="2" />
-                        <label for="couple">Couple (2)</label>
-                    </div>
-                    <div class="flex gap-2">
-                        <input type="radio" name="passengers" id="group" value="3-6" />
-                        <label for="group">Group (3-6)</label>
+                <!-- Number of Passengers -->
+                <div>
+                    <label class="block text-gray-300 mb-3 text-xl font-orbitron">Number of Passengers </label>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="radio-option">
+                            <input type="radio" name="passengers" id="solo" value="1" checked required>
+                            <label for="solo" class="radio-label">
+                                <div class="radio-circle"></div>
+                                <div class="radio-content">
+                                    <span class="radio-title">Solo Traveler</span>
+                                    <span class="radio-description">1 passenger</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="radio-option">
+                            <input type="radio" name="passengers" id="couple" value="2">
+                            <label for="couple" class="radio-label">
+                                <div class="radio-circle"></div>
+                                <div class="radio-content">
+                                    <span class="radio-title">Couple</span>
+                                    <span class="radio-description">2 passengers</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="radio-option">
+                            <input type="radio" name="passengers" id="group" value="3-6">
+                            <label for="group" class="radio-label">
+                                <div class="radio-circle"></div>
+                                <div class="radio-content">
+                                    <span class="radio-title">Group</span>
+                                    <span class="radio-description">3-6 passengers</span>
+                                </div>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Accommodation Section -->
                 <div id="accommodationSection" class="hidden">
-                    <label class="block text-gray-300 mb-2">Accommodation Type</label>
-                    <div id="accommodationOptions" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    </div>
+                    <label class="block text-gray-300 mb-3 font-semibold text-xl font-orbitron">Accommodation Type </label>
+                    <div id="accommodationOptions" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
                 </div>
 
                 <!-- Conditional Fields -->
-                <div id="conditionalFields">
-                    <!-- Conditional fields will appear here -->
-                </div>
+                <div id="conditionalFields"></div>
 
-                <hr class=" border-[rgba(14,165,233,0.3)] border-1 my-6">
+                <hr class="border-[rgba(14,165,233,0.3)] border-1 my-6">
 
+                <!-- Personal Information -->
                 <div>
                     <div class="flex justify-between items-center mb-4">
-                        <label class="block text-gray-300 text-xl font-orbitron">Personal Information</label>
+                        <label class="block text-gray-300 text-xl font-orbitron">Passenger Information</label>
                     </div>
-                    <div id="passengersContainer" class="space-y-6">
-                        <!-- Passenger forms will be added here -->
-                    </div>
-                </div>
-                <p class="feedback text-xs mt-1 hidden"></p>
-                <!-- Special Requirements -->
-                <div>
-                    <label class="block text-gray-300 mb-2">Special Requirements</label>
-                    <textarea class="form-input w-full px-4 py-3"
-                        placeholder="Any special requirements or notes..."></textarea>
+                    <div id="passengersContainer" class="space-y-6"></div>
                 </div>
 
-                <button type="button" id="addPassenger" class="text-white w-full py-3 rounded-lg font-bold glow">
-                    Add Passenger
+                <!-- Add Passenger Button -->
+                <button type="button" id="addPassenger" class="btn-primary text-white w-full py-3 rounded-lg font-bold">
+                 Add Passenger
                 </button>
+
+                <!-- Special Requirements -->
+                <div>
+                    <label class="block text-gray-300 mb-2 font-semibold">Special Requirements</label>
+                    <textarea class="form-input w-full px-4 py-3 h-32" placeholder="Any dietary restrictions, medical conditions, or special requests..."></textarea>
+                </div>
+
+                <!-- Price Summary -->
                 <div id="priceSummary" class="hidden mt-6"></div>
+
                 <!-- Submit Button -->
-                <button id="confbooking" type="submit"
-                    class="btn-primary text-white w-full py-3 rounded-lg font-bold glow conf-booking" disabled>
-                    Confirm Booking
+                <button id="confbooking" type="submit" class="btn-primary text-white w-full py-4 rounded-lg font-bold text-lg" disabled>
+                 Confirm Booking
                 </button>
             </form>
         </div>
@@ -318,8 +376,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-4 md:mb-0">
                     <div class="flex items-center space-x-2 mb-2">
-                        <div
-                            class="w-8 h-8 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center">
                             <i class="fas fa-rocket text-white text-sm"></i>
                         </div>
                         <span class="font-orbitron text-lg">SpaceVoyager</span>
@@ -327,7 +384,7 @@
                     <p class="text-gray-400 text-sm">© 2023 SpaceVoyager. All rights reserved.</p>
                 </div>
 
-                <div class="flex space-x-6 mb-4 md:mb-0">
+                <div class="flex space-x-6">
                     <a href="#" class="text-gray-400 hover:text-neon-blue transition-colors text-xl">
                         <i class="fab fa-twitter"></i>
                     </a>

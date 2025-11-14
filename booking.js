@@ -52,28 +52,28 @@ function createPassengerForm(index) {
   div.className = 'passenger-card content-card p-6 space-y-4';
   div.innerHTML = `
     <div class="flex justify-between items-center">
-      <h3 class="font-semibold text-lg">Passenger ${index}</h3>
-      ${index > 1 ? '<button type="button" class="remove-passenger text-red-400 text-sm hover:underline">Remove</button>' : ''}
+      <h3 class="font-semibold text-lg text-cyan-300">Passenger ${index}</h3>
+      ${index > 1 ? '<button type="button" class="remove-passenger text-red-400 text-sm hover:text-red-300 transition-colors">Remove</button>' : ''}
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="relative">
-        <label class="block text-gray-300 mb-2">First Name</label>
-        <input type="text" data-field="firstName" placeholder="Enter first name" class="form-input w-full px-4 py-3" required />
+        <label class="block text-gray-300 mb-2">First Name </label>
+        <input type="text" data-field="firstName" placeholder="Enter first name" class="form-input w-full px-4 py-3"  />
         <p class="feedback text-xs mt-1 hidden"></p>
       </div>
       <div class="relative">
-        <label class="block text-gray-300 mb-2">Last Name</label>
-        <input type="text" data-field="lastName" placeholder="Enter last name" class="form-input w-full px-4 py-3" required />
+        <label class="block text-gray-300 mb-2">Last Name </label>
+        <input type="text" data-field="lastName" placeholder="Enter last name" class="form-input w-full px-4 py-3" />
         <p class="feedback text-xs mt-1 hidden"></p>
       </div>
       <div class="relative">
-        <label class="block text-gray-300 mb-2">Email Address</label>
-        <input type="email" data-field="email" placeholder="Enter email" class="form-input w-full px-4 py-3" required />
+        <label class="block text-gray-300 mb-2">Email Address </label>
+        <input type="email" data-field="email" placeholder="Enter email" class="form-input w-full px-4 py-3"  />
         <p class="feedback text-xs mt-1 hidden"></p>
       </div>
       <div class="relative">
         <label class="block text-gray-300 mb-2">Phone Number</label>
-        <input type="tel" data-field="phone" placeholder="Enter phone" class="form-input w-full px-4 py-3" />
+        <input type="tel" data-field="phone" placeholder="" class="form-input w-full px-4 py-3" />
         <p class="feedback text-xs mt-1 hidden"></p>
       </div>
     </div>
@@ -107,16 +107,34 @@ function updatePassengerLabels() {
   });
 }
 
-// === PASSENGER RADIO ===
+// === PASSENGER RADIO - FIXED ===
 function handlePassengerChange() {
   const radio = document.querySelector('input[name="passengers"]:checked');
   if (!radio) return;
 
-  const targetCount = radio.value === "3-6" ? 3 : parseInt(radio.value);
+  let targetCount = 1;
+  if (radio.value === "3-6") {
+    targetCount = 3;
+  } else {
+    targetCount = parseInt(radio.value);
+  }
+
   const currentCount = passengersContainer.children.length;
 
-  while (currentCount < targetCount) addPassenger();
-  while (currentCount > targetCount) passengersContainer.lastChild?.remove();
+  // Add passengers if needed
+  if (currentCount < targetCount) {
+    for (let i = currentCount; i < targetCount; i++) {
+      addPassenger();
+    }
+  }
+  
+  // Remove passengers if needed
+  if (currentCount > targetCount) {
+    for (let i = currentCount; i > targetCount; i--) {
+      const lastChild = passengersContainer.lastChild;
+      if (lastChild) lastChild.remove();
+    }
+  }
 
   updatePassengerLabels();
   updatePriceSummary();
@@ -179,9 +197,13 @@ function updateConditionalFields(dest) {
     const field = document.createElement('div');
     field.className = 'mb-6';
     field.innerHTML = `
-      <label class="flex items-center space-x-2">
-        <input type="checkbox" class="form-input insurance-checkbox" checked>
-        <span class="text-gray-300">Enhanced radiation protection insurance (+$10,000)</span>
+      <label class="flex items-center space-x-3 cursor-pointer p-4 rounded-lg bg-space-purple/30 border border-neon-cyan/30 hover:border-neon-cyan/60 transition-all">
+        <input type="checkbox" class="form-input insurance-checkbox w-5 h-5" checked>
+        <span class="text-gray-300 flex-1">
+          <span class="font-semibold text-cyan-300">Enhanced Radiation Protection Insurance</span>
+          <span class="block text-xs text-gray-400 mt-1">Recommended for Europa and Titan missions</span>
+        </span>
+        <span class="text-yellow-400 font-bold">+$10,000</span>
       </label>
     `;
     field.querySelector('.insurance-checkbox').addEventListener('change', updatePriceSummary);
@@ -217,13 +239,13 @@ function updatePriceSummary() {
   const totalPrice = baseTotal + extra;
 
   priceSummary.innerHTML = `
-    <div class="bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 rounded-xl p-6 text-center border border-neon-blue/50">
-      <h3 class="font-orbitron text-2xl text-glow text-cyan-300 mb-2">Total Price</h3>
-      <p class="text-4xl font-bold text-white tracking-wider">${formatPrice(totalPrice)}</p>
-      <p class="text-sm text-gray-300 mt-2">
-        ${passengerCount} passenger${passengerCount > 1 ? 's' : ''} × ${formatPrice(totalPerPerson)}/person
-        ${extra > 0 ? `<span class="text-yellow-400">+ $10,000 insurance</span>` : ''}
-      </p>
+    <div class="bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 rounded-xl p-6 border border-neon-blue/50">
+        <div class="flex justify-between items-center">
+          <h3 class="font-orbitron text-2xl text-glow text-cyan-300">Total Price</h3>
+          <p class="text-3xl font-bold text-white tracking-wider">${formatPrice(totalPrice)}</p>
+        </div>
+        
+      </div>
     </div>
   `;
   priceSummary.classList.remove('hidden');
@@ -241,7 +263,11 @@ function hideFeedback(el) {
 }
 
 function getRequiredMessage(field) {
-  const map = { firstName: "First name is required", lastName: "Last name is required", email: "Email is required" };
+  const map = { 
+    firstName: "First name is required", 
+    lastName: "Last name is required", 
+    email: "Email is required" 
+  };
   return map[field] || `${field} is required`;
 }
 
@@ -261,17 +287,17 @@ function validateFieldLive(input) {
 
   if (['firstName', 'lastName'].includes(field) && value) {
     if (isValidName(value)) {
-      showFeedback(feedback, 'Looks good', 'green');
+      showFeedback(feedback, ' Valid name', 'green');
       return true;
     } else {
-      showFeedback(feedback, 'Looks bad', 'red');
+      showFeedback(feedback, 'Name must be at least 2 characters', 'red');
       return false;
     }
   }
 
   if (field === 'email' && value) {
     const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-    showFeedback(feedback, isValid ? 'Valid email' : 'Invalid email format', isValid ? 'green' : 'red');
+    showFeedback(feedback, isValid ? ' Valid email' : 'Invalid email format', isValid ? 'green' : 'red');
     return isValid;
   }
 
@@ -280,6 +306,8 @@ function validateFieldLive(input) {
       showFeedback(feedback, 'Invalid phone format', 'red');
       return false;
     }
+    showFeedback(feedback, 'Valid phone', 'green');
+    return true;
   }
 
   if (value) {
@@ -294,14 +322,25 @@ function validateFieldLive(input) {
 function validateDepartureDate() {
   const input = document.getElementById('departureDate');
   const date = new Date(input.value);
-  const today = new Date(); today.setHours(0,0,0,0);
-  const max = new Date(today); max.setDate(today.getDate() + 30);
+  const today = new Date(); 
+  today.setHours(0,0,0,0);
+  const max = new Date(today); 
+  max.setDate(today.getDate() + 30);
 
   const error = document.getElementById('departureDateError') || createErrorElement(input);
 
-  if (!input.value) { showInlineError(error, "Please select a departure date"); return false; }
-  if (date < today) { showInlineError(error, "Date must be in the future"); return false; }
-  if (date > max) { showInlineError(error, "Booking max 30 days in advance"); return false; }
+  if (!input.value) { 
+    showInlineError(error, "Please select a departure date"); 
+    return false; 
+  }
+  if (date < today) { 
+    showInlineError(error, "Date must be in the future"); 
+    return false; 
+  }
+  if (date > max) { 
+    showInlineError(error, "Booking max 30 days in advance"); 
+    return false; 
+  }
   clearInlineError(error);
   return true;
 }
@@ -339,7 +378,7 @@ function updateSubmitButtonLive() {
   submitBtn.disabled = hasErrors || !requiredFilled;
 }
 
-// === SUBMIT (UNIQUE) ===
+// === SUBMIT ===
 bookingForm.addEventListener("submit", function (e) {
   e.preventDefault();
 
@@ -351,9 +390,13 @@ bookingForm.addEventListener("submit", function (e) {
   });
 
   if (!validateDepartureDate()) allValid = false;
-  if (!destinationSelect.value) { alert("Please select a destination."); allValid = false; }
+  if (!destinationSelect.value) { 
+    alert("Please select a destination."); 
+    allValid = false; 
+  }
   if (!accommodationSection.classList.contains('hidden') && !document.querySelector('input[name="accommodation"]:checked')) {
-    alert("Please select an accommodation."); allValid = false;
+    alert("Please select an accommodation."); 
+    allValid = false;
   }
 
   if (!allValid) {
@@ -361,7 +404,7 @@ bookingForm.addEventListener("submit", function (e) {
     return;
   }
 
-  // === CALCUL DU PRIX FINAL ===
+  // Calculate final price
   const destination = destinations.find(d => d.id === destinationSelect.value);
   const accInput = document.querySelector('input[name="accommodation"]:checked');
   const accommodation = accommodations.find(a => a.id === accInput.value);
@@ -378,7 +421,7 @@ bookingForm.addEventListener("submit", function (e) {
   const extra = insurance?.checked ? 10000 : 0;
   const finalTotal = baseTotal + extra;
 
-  // === SAUVEGARDE ===
+  // Save booking
   const bookingData = {
     id: generateUUID(),
     destination: destination,
@@ -398,6 +441,8 @@ bookingForm.addEventListener("submit", function (e) {
 
   saveBooking(bookingData);
 
+  // Show success message
+  alert("Booking confirmed! Redirecting to your bookings...");
   window.location.href = "mybooking.html";
 });
 
@@ -420,7 +465,7 @@ async function loadData() {
     initForm();
   } catch (err) {
     console.error("Error:", err);
-    alert("Unable to load data.");
+    alert("Unable to load data. Please refresh the page.");
   }
 }
 
@@ -432,6 +477,7 @@ function initForm() {
     const dest = destinations.find(d => d.id === destinationSelect.value);
     accommodationSection.classList.add('hidden');
     conditionalFields.innerHTML = '';
+    
     if (dest) {
       updateAccommodations(dest);
       updateConditionalFields(dest);
@@ -478,9 +524,4 @@ function initForm() {
 document.addEventListener('DOMContentLoaded', () => {
   createStars();
   loadData();
-
-  const pending = sessionStorage.getItem('pendingBooking');
-  if (pending && confirm("You have a pending booking. Restore it?")) {
-    sessionStorage.removeItem('pendingBooking');
-  }
 });
